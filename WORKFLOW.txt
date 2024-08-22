@@ -1,0 +1,14 @@
+1. Open directory (done)
+-- renamed to 02_00 format... but note we should look at the bleach format
+
+
+2. Cluster according to hyb, bleach rounds (bulk rename)
+3. Convert ims to tiff (done)
+4. Split tiff into separate channels and separate z stacks
+5. Group colours according to their z stack
+6. Convert tiff to dax (done)
+
+So ideally we would have
+Cy3_00_01_01z.dax
+
+Or Cy5_05_88_05z.dax
