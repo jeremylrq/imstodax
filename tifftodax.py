@@ -4,54 +4,19 @@ Convert a mess of tiff files into a single dax file.
 
 Hazen 09/14
 """
+import sa_library.datawriter as datawriter
+import sa_library.datareader as datareader
 
-import glob
-import numpy
-import sys
-
-from sa_library import datawriter
-from sa_library import datareader
-
-
-# import storm_analysis.sa_library.datawriter as datawriter
-# import storm_analysis.sa_library.datareader as datareader
-
-dax_file = datawriter.DaxWriter('dax')
-tiff_files = "OneDrive\\Desktop\\GIS attachment\\confocal testing\\output\\channel_1_z_1.tiff"
-
-# if (len(sys.argv) != 3):
-#     print("usage: <dax> <tiff dir>")
-#     exit()
-
-# dax_file = datawriter.DaxWriter(sys.argv[1])
-# tiff_files = sorted(glob.glob(sys.argv[2] + "*.tif"))
-
-if (len(tiff_files) == 0):
-    print("No tiff files found")
-    exit()
-
-# for tiff_image in tiff_files:
-#     print(tiff_image)
-#     data = datareader.TifReader(tiff_image).loadAFrame(0)
-#     if 0:
-#         data = data - numpy.median(data) + 2000
-#     dax_file.addFrame(data)
+def create_dax(splitted_tiffs):
+     for tiff in splitted_tiffs:
+          dax_file = datawriter.DaxWriter(tiff.replace('.tiff', '.dax'))
+          data = datareader.TifReader(tiff).loadAFrame(0)
+          dax_file.addFrame(data)
+          dax_file.close()
 
 
-data = datareader.TifReader(tiff_files).loadAFrame(0)
-# if 0:
-#     data = data - numpy.median(data) + 2000
-dax_file.addFrame(data)
-
-print(dax_file)
-
-# # creating a image object (main image) 
-# im1 = Image.open(dax_file) 
-
-# # save a image using extension
-# im1 = im1.save("geeks.jpg")
-
-dax_file.close()
+if __name__ == "__main__":
+     create_dax()
 
 #
 # The MIT License

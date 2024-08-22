@@ -10,15 +10,13 @@ import shutil
 from tkinter import filedialog
 
 from imstotiff import driver
-from splittiff import process_tiff, z_channels
-from original import create_dax
+from tiffprocessing import process_tiff, z_channels
+from tifftodax import create_dax
 
 # PARAMETERS TO MODIFY #
 # channel_list = {"c1": "Cy3_WF", "c2": "Cy7_WF", "c3": "Cy5_WF", "c4": "Cy3_confocal", "c5": "Cy7_confocal", "c6": "Cy5_confocal"}
 channel_list = {"c1": "Cy3", "c2": "Cy5"}
 
-
-bulk_rename_ims = True
 
 # Select directory containing .ims / .tiff files
 root = tk.Tk()
@@ -26,20 +24,30 @@ root.withdraw()
 data_path = filedialog.askdirectory(title="Please select data directory")
 root.destroy()
 
-# Bulk renames all .ims files
-if bulk_rename_ims:
-    # Iterate through all files in the directory
-    for filename in os.listdir(data_path):
+
+#Converts ims to tiff (NOTE: The Oakes lab code saves it as .tif and the below uses .tiff which is quite amusing)
+    
+# Get all of the ims files
+cwd = data_path + '/'
+ims_files = glob.glob(cwd + '*.ims')
+ims_files = [f_name.replace('\\','/' ) for f_name in ims_files]
+
+# Pass the filenames and the downsample factor to the driver
+driver(ims_files, ds_factor = 1)
+
+# Renames tiff files
+# Iterate through all files in the directory
+for filename in os.listdir(data_path):
+    _, ext = os.path.splitext(filename)
+    if ext == ".tif":
         # Split the filename to extract the part with the pattern like "2_F00"
         parts = filename.split('_')
-        
-        # For cases where the file ends with "Sona_F00" which indicates the first hyb. This corresponds to 00_00 on Dory
+        # For cases where the file ends with "Sona_F00" which indicates the first hyb. This corresponds to 00_00 on Dory (should be more dynamic)
         if parts[-2].startswith('Sona'):
             # Assumes that DAPI images are taken on first hyb and named separately from the first hyb (filename starts with DAPI)
             if parts[1].startswith('DAPI'):
                 new_filename = f'DAPI_00_0{parts[-1][1:]}'
                 break  
-            
             new_filename= f'00_0{parts[-1][1:]}'
         else:
             new_filename = f'{parts[-2].zfill(2)}_0{parts[-1][1:]}'
@@ -53,19 +61,8 @@ if bulk_rename_ims:
         print(f'Renamed: {old_file_path} -> {new_file_path}')
 
 
-#Converts ims to tiff (NOTE: The Oakes lab code saves it as .tif and the below uses .tiff which is quite amusing)
-    
-# Get all of the ims files
-cwd = data_path + '/'
-ims_files = glob.glob(cwd + '*.ims')
-ims_files = [f_name.replace('\\','/' ) for f_name in ims_files]
-
-# Pass the filenames and the downsample factor to the driver
-driver(ims_files, ds_factor = 1)
-
 # Grabs all tiff files
 tiff_files = glob.glob(cwd + '*.tif')
-tiff_files = [t_name.replace('\\','/' ) for t_name in tiff_files]
 
 # Obtains number of z stacks in each tiff image. It looks only at the first tiff image which is assumed to be the same format as the rest.
 z_number = z_channels(tiff_files[0])
@@ -76,16 +73,11 @@ for z_current in range(z_number):
     folder_path = os.path.join(cwd, folder_name)
     os.makedirs(folder_path, exist_ok=True)
 
-# Splits and renames tiff into the correct format
+# Splits and appends channels to file name. The logic should be correct
 for tiff in tiff_files:
-    process_tiff(tiff, data_path, channel_list)
-
-tiff_files = glob.glob(cwd + '*.tiff')
-tiff_files = [t_name.replace('\\','/' ) for t_name in tiff_files]
-
-
-for _ in tiff_files:
-    create_dax(cwd, _)
+    tiff = tiff.replace('\\','/' )
+    splitted_tiffs = process_tiff(tiff, data_path, channel_list)
+    create_dax(splitted_tiffs)
 
 
 # Sorts all files into their z stack

@@ -3,7 +3,15 @@ import numpy as np
 import os
 import re
 
+def rename_tiff(output_filename, channel_list):
+    for key, value in channel_list.items():
+        output_filename = output_filename.replace(key, value)
+
+    return output_filename
+
 def process_tiff(tiff_path, output_dir, channel_list):
+
+    splitted_tiffs = []
 
     # Isolates the xx_yy region from the file directory
     tiff_name = re.split(r'[/,.]', tiff_path)[-2]
@@ -32,25 +40,20 @@ def process_tiff(tiff_path, output_dir, channel_list):
         for z in range(num_z_planes):
             # Select the appropriate channel and z-plane
             single_image = images.take(c, axis=channel_idx).take(z, axis=z_plane_idx)
+            
             # Save the image
-
             output_filename = f'c{c+1}_{tiff_name}_z{z+1}.tiff'
             new_output_filename = rename_tiff(output_filename, channel_list)
-
             output_path = os.path.join(output_dir, new_output_filename)
             tifffile.imwrite(output_path, single_image)
-
-            # Renames the file to the conventional format (e.g. Cy3_00_01.tif)
-
-
+            
+            # Saves file extension to a list
+            output_path = output_path.replace('\\','/')
+            splitted_tiffs.append(output_path)
 
     print(f"Saved {num_channels * num_z_planes} images to {output_dir}")
-# # Usage example:
-# tiff_path = 'OneDrive\\Desktop\\GIS attachment\\confocal testing\\test.tif'
-# output_dir = 'C:\\Users\\Jeremy\\OneDrive\\Desktop\\GIS attachment\\confocal testing\\output'
-# split_tiff(tiff_path, output_dir)
 
-
+    return splitted_tiffs
 
 def z_channels(tiff_path):
 
@@ -67,13 +70,3 @@ def z_channels(tiff_path):
 
     return num_z_planes
 
-def rename_tiff(output_filename, channel_list):
-    for key, value in channel_list.items():
-        output_filename = output_filename.replace(key, value)
-
-    return output_filename
-
-
-
-if __name__ == "__main__":
-    print(channels("C:\\Users\\Jeremy\\OneDrive\\Desktop\\GIS attachment\\confocal testing\\rename_test\\02_00000000000.tif"))

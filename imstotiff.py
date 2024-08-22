@@ -204,37 +204,3 @@ def driver(passed_files, ds_factor=1):
     # input('Press Enter To Exit')
     # exit(0)
 
-
-def tiff_convert(data_path):
-    # # Check for tif files in the directory
-    # tif_files = glob.glob('*.tif')
-
-    # if len(tif_files) > 0:
-    #     raise SystemExit('Conversion has already been run in this directory. Exiting.')
-
-   
-    
-    # #Get user to select the image data directory where the ims files ares
-    # root = tk.Tk()
-    # root.withdraw()
-    # data_path = filedialog.askdirectory(title="Please select image data directory")
-    # ds_factor = simpledialog.askinteger(title='Downsample factor', prompt = 'Input downsize factor (1 is direct conversion):')
-    # root.destroy()
-    
-    
-    # # Get the working image directory
-    # cwd = data_path + '/'
-    
-    # # Get all of the ims files
-    # ims_files = glob.glob(cwd+'*.ims')
-    
-    # # Prepend the cwd to all of the files
-    # ims_files = [f_name.replace('\\','/' ) for f_name in ims_files]
-    
-    
-    # Pass the filenames and the downsample factor to the driver
-    driver(ims_files, ds_factor = 1)
-
-
-if __name__ == '__main__':
-   tiff_convert()
