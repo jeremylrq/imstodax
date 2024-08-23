@@ -16,6 +16,8 @@ from tifftodax import create_dax
 # PARAMETERS TO MODIFY #
 # channel_list = {"c1": "Cy3_WF", "c2": "Cy7_WF", "c3": "Cy5_WF", "c4": "Cy3_confocal", "c5": "Cy7_confocal", "c6": "Cy5_confocal"}
 channel_list = {"c1": "Cy3", "c2": "Cy5"}
+save_as_dax = True # Set to false to save as tiff
+
 
 
 # Select directory containing .ims / .tiff files
@@ -39,7 +41,7 @@ driver(ims_files, ds_factor = 1)
 # Iterate through all files in the directory
 for filename in os.listdir(data_path):
     _, ext = os.path.splitext(filename)
-    if ext == ".tif":
+    if ext == ".tiff":
         # Split the filename to extract the part with the pattern like "2_F00"
         parts = filename.split('_')
         # For cases where the file ends with "Sona_F00" which indicates the first hyb. This corresponds to 00_00 on Dory (should be more dynamic)
@@ -62,7 +64,7 @@ for filename in os.listdir(data_path):
 
 
 # Grabs all tiff files
-tiff_files = glob.glob(cwd + '*.tif')
+tiff_files = glob.glob(cwd + '*.tiff')
 
 # Obtains number of z stacks in each tiff image. It looks only at the first tiff image which is assumed to be the same format as the rest.
 z_number = z_channels(tiff_files[0])
@@ -77,7 +79,11 @@ for z_current in range(z_number):
 for tiff in tiff_files:
     tiff = tiff.replace('\\','/' )
     splitted_tiffs = process_tiff(tiff, data_path, channel_list)
-    create_dax(splitted_tiffs)
+
+    if save_as_dax:
+        create_dax(splitted_tiffs)
+    else:
+        continue
 
 
 # Sorts all files into their z stack
@@ -87,6 +93,16 @@ files = os.listdir(cwd)
 
 # Loop through each file
 for file in files:
+    
+    _ , ext = os.path.splitext(file)
+    
+    # Deletes tiff files 
+    if save_as_dax:
+        if ext == ".tiff":
+            file_h = cwd + file
+            os.remove(file_h)
+            continue
+
     # Check if the file matches the expected pattern with z-index
     match = re.search(r'_z(\d+)', file)
     

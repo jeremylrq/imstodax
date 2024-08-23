@@ -81,8 +81,8 @@ def convert_to_tif(f_name):
     print('Native (rows, cols): (%d,%d)'%(n_rows, n_cols))
     print('_'*len(banner_text))
 
-    print(f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tif')
-    with TiffWriter(f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tif', imagej=True) as out_tif:
+    print(f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tiff')
+    with TiffWriter(f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tiff', imagej=True) as out_tif:
         mmap_fname = f_name+'.mmap'
         output_stack = np.memmap(mmap_fname, dtype=np.uint16, shape=(n_time_points, bad_index_start, n_channels, n_rows, n_cols), mode='w+')
 
@@ -100,11 +100,11 @@ def convert_to_tif(f_name):
         del output_stack
         os.remove(mmap_fname)
     # changes to relocated the converted file to the image file
-    new_fname = f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tif'
+    new_fname = f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tiff'
     current_path = os.getcwd()
     current_path = current_path.replace("\\",'/')
-    path = current_path + '/'+ f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tif'
-    destination ='/'.join(f_name.rsplit('.', maxsplit=1)[0].split('/')[0:])+ '.tif' 
+    path = current_path + '/'+ f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tiff'
+    destination ='/'.join(f_name.rsplit('.', maxsplit=1)[0].split('/')[0:])+ '.tiff' 
     shutil.move(path, destination)
 
 
