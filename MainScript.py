@@ -1,6 +1,4 @@
 #TO SOLVE: issue of bleach (perhaps we just iterate over every 2nd file. Or we just set manual hyb numbers...)
-# TO SOLVE: adjusting the file rename (don't do the rename before, do it after...)
-# TO SOLVE: have an option for toggling between tiff and dax. I think its quite bad if we save both
 
 import os
 import tkinter as tk
@@ -10,15 +8,14 @@ import shutil
 from tkinter import filedialog
 
 from imstotiff import driver
-from tiffprocessing import process_tiff, z_channels
+from tiffprocessing import process_tiff
 from tifftodax import create_dax
 
 # PARAMETERS TO MODIFY #
 # channel_list = {"c1": "Cy3_WF", "c2": "Cy7_WF", "c3": "Cy5_WF", "c4": "Cy3_confocal", "c5": "Cy7_confocal", "c6": "Cy5_confocal"}
 channel_list = {"c1": "Cy3", "c2": "Cy5"}
 save_as_dax = True # Set to false to save as tiff
-
-
+remove_z_label = False # To remove trailing z at the back of filename
 
 # Select directory containing .ims / .tiff files
 root = tk.Tk()
@@ -59,15 +56,6 @@ for file in tiff_files:
     print(f'Renamed: {file} -> {new_file_path}')
     renamed_tiff_files.append(new_file_path)
 
-# Obtains number of z stacks in each tiff image. It looks only at the first tiff image which is assumed to be the same format as the rest.
-z_number = z_channels(renamed_tiff_files[0])
-
-# Prepares folders to slot images into later.
-for z_current in range(z_number):
-    folder_name = f'zstack_{z_current + 1}'
-    folder_path = os.path.join(cwd, folder_name)
-    os.makedirs(folder_path, exist_ok=True)
-
 # Splits and appends channels to file name. 
 for tiff in renamed_tiff_files:
     tiff = tiff.replace('\\','/' )
@@ -77,7 +65,6 @@ for tiff in renamed_tiff_files:
         create_dax(splitted_tiffs)
     else:
         continue
-
 
 # Sorts all files into their z stack
 
@@ -109,10 +96,22 @@ for file in files:
         # Define the full path to the destination folder
         dest_folder = os.path.join(cwd, folder_name)
         
-        # # Ensure the destination folder exists
+        # Ensure the destination folder exists
         os.makedirs(dest_folder, exist_ok=True)
         
-        # Move the file to the corresponding folder
-        src_file = os.path.join(cwd, file)
-        dest_file = os.path.join(dest_folder, file)
+        # Move the file to the corresponding folder.
+
+        if remove_z_label:
+            file_path = cwd + file
+            new_file_path = file_path.replace(f'_z{z_index}', '')
+            os.rename(file_path, new_file_path)
+
+            src_file = new_file_path
+            dest_file = os.path.join(dest_folder, os.path.basename(src_file))
+
+
+        else:
+            src_file = os.path.join(cwd, file)
+            dest_file = os.path.join(dest_folder, file)
+
         shutil.move(src_file, dest_file)
