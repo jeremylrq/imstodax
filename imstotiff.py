@@ -72,14 +72,14 @@ def convert_to_tif(f_name):
     # Get the index of the bad frame start
     bad_index_start = get_bad_frame_index(np.array(base_data[resolution_levels[0]][time_points[0]][channels[0]]['Data']))
 
-    banner_text = 'File Breakdown'
-    print(banner_text)
-    print('_'*len(banner_text))
-    print('Channels: %d' % n_channels)
-    print('Time Points: %d' % n_time_points)
-    print('Z Levels: %d' % (bad_index_start+1))
-    print('Native (rows, cols): (%d,%d)'%(n_rows, n_cols))
-    print('_'*len(banner_text))
+    # banner_text = 'File Breakdown'
+    # print(banner_text)
+    # print('_'*len(banner_text))
+    # print('Channels: %d' % n_channels)
+    # print('Time Points: %d' % n_time_points)
+    # print('Z Levels: %d' % (bad_index_start+1))
+    # print('Native (rows, cols): (%d,%d)'%(n_rows, n_cols))
+    # print('_'*len(banner_text))
 
     print(f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tiff')
     with TiffWriter(f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tiff', imagej=True) as out_tif:
@@ -106,6 +106,7 @@ def convert_to_tif(f_name):
     path = current_path + '/'+ f_name.rsplit('.', maxsplit=1)[0].split('/')[-1] + '.tiff'
     destination ='/'.join(f_name.rsplit('.', maxsplit=1)[0].split('/')[0:])+ '.tiff' 
     shutil.move(path, destination)
+    return destination
 
 
 
@@ -168,16 +169,12 @@ def downsample_to_tif(f_name, ds_factor=8):
     
     
 def driver(passed_files, ds_factor=1):
-    # Obtain the command-line arguments
-    # Assume that the first argument passed is the downsample factor, whether it be 1, 8, whatever
-    # ds_factor = int(sys.argv[1])
 
+    tiff_list = []
     # Check to make sure that the downsampling factor is a power of two
     if not bin(ds_factor).count('1') == 1:
         raise SystemExit('Invalid downsample factor. Must be a power of two.')
 
-    # Obtain the list of passed file paths
-    # passed_files = sys.argv[2:]
 
     if ds_factor > 1:
         downsampled = True
@@ -187,20 +184,15 @@ def driver(passed_files, ds_factor=1):
         converter_func = convert_to_tif
 
     for f_name in passed_files:
-        print('')
-        print('Processing %s'%f_name)
-        print('')
-
         if downsampled:
             converter_func(f_name, ds_factor)
         else:
-            converter_func(f_name)
+            tiff_list.append(converter_func(f_name))
+
+    return tiff_list
 
 
-    print('')
-    print('Processed:')
-    for f_name in passed_files:
-        print(f_name)
-    # input('Press Enter To Exit')
-    # exit(0)
-
+# To test driver ability to capture list of files
+if __name__ == "__main__":
+    test_ims_file = ["C:/Users/Jeremy/OneDrive/Desktop/GIS attachment/confocal testing/rename_test/test.ims"]
+    tiffs = driver(test_ims_file, ds_factor=1)
