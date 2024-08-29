@@ -15,7 +15,6 @@ def process_tiff(tiff_path, output_dir, channel_list):
 
     # Isolates the xx_yy region from the file directory
     tiff_name = re.split(r'[/,.]', tiff_path)[-2]
-    # print(f'This is the tiff_name', tiff_name)
 
     # Load the multi-channel, multi-z-plane TIFF file
     with tifffile.TiffFile(tiff_path) as tif:
@@ -36,6 +35,7 @@ def process_tiff(tiff_path, output_dir, channel_list):
     os.makedirs(output_dir, exist_ok=True)
     
     # Split and save each channel and z-plane
+    #for c in range(num_channels):
     for c in range(num_channels):
         for z in range(num_z_planes):
             # Select the appropriate channel and z-plane
