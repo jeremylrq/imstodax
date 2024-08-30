@@ -16,7 +16,9 @@ where 0_F00 refers to the hyb number (2) and the FOV (region 05). The code may n
 5. .tiff files are converted to .dax if set to true.
 6. The files are sorted to their respective z-stacks. If remove_z_label is set True, the trailing _z1 parameter will be removed.
 
-
+# Source code
+The tiff-to-dax conversion is from the Zhuang lab repository: https://github.com/ZhuangLab/storm-analysis/tree/71ae493cbd17ddb97938d0ae2032d97a0eaa76b2
+The ims-to-tiff conversion is from the Oakes lab repository: https://github.com/OakesLab/ims-to-tif-converter
 
 
 
