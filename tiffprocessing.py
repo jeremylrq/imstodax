@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Aug 30 15:51:32 2024
+
+@author: (Jeremy)
+"""
+
 import tifffile
 import numpy as np
 import os
@@ -34,9 +41,9 @@ def process_tiff(tiff_path, output_dir, channel_list):
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
     
-    # Split and save each channel and z-plane
+    # Split and save each channel and z-plane: if channel 4-6, then write 3-6 (because up to but not including)
     #for c in range(num_channels):
-    for c in range(num_channels):
+    for c in range(3,6):
         for z in range(num_z_planes):
             # Select the appropriate channel and z-plane
             single_image = images.take(c, axis=channel_idx).take(z, axis=z_plane_idx)
@@ -69,4 +76,3 @@ def z_channels(tiff_path):
     num_z_planes = images.shape[z_plane_idx]
 
     return num_z_planes
-

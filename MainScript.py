@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Aug 30 15:51:32 2024
+
+@author: (Jeremy)
+"""
+
 import os
 import tkinter as tk
 import glob
@@ -11,10 +18,10 @@ from imstotiff import driver
 from tiffprocessing import process_tiff
 from tifftodax import create_dax
 
-################### PARAMETERS TO MODIFY ##########################
-channel_list = {"c1": "Cy3_WF", "c2": "Cy7_WF", "c3": "Cy5_WF", "c4": "Cy3_confocal", "c5": "Cy7_confocal", "c6": "Cy5_confocal"}
+################### PARAMETERS TO MODIFY MANUALLY ##########################
+# channel_list = {"c1": "Cy3_WF", "c2": "Cy7_WF", "c3": "Cy5_WF", "c4": "Cy3_confocal", "c5": "Cy7_confocal", "c6": "Cy5_confocal"}
 # channel_list = {"c1": "Cy3", "c2": "Cy5"} # Set the channel labels
-# channel_list = {"c4": "Cy3", "c5": "Cy7", "c6": "Cy5"} # Set the channel labels
+channel_list = {"c4": "Cy3", "c5": "Cy7", "c6": "Cy5"} # Set the channel labels
 
 save_as_dax = True # Set to false to save as tiff
 remove_z_label = True # To remove trailing z at the back of filename
@@ -22,10 +29,8 @@ bleach = True # Set true/false to toggle bleach numbering
 
 # Check files to toggle first and final hyb numbers manually. Must be integers. The first hyb number must be a hyb round and not a bleaching round.
 first_hybnum = 0
-last_hybnum = 3
+last_hybnum = 7
 ####################################################################
-
-
 
 # Select directory containing .ims / .tiff files
 root = tk.Tk()
@@ -73,8 +78,7 @@ if bleach:
             elif not evenhybs:
                 hybmap[i] = ceil(i/2)
 
-# This outputs a filename of the format e.g. 00_01.tiff
-# 
+# This renames the file and outputs a filename of the format e.g. 00_01.tiff
 for file in tiff_files:
     parts = re.split(r'[_\.]', file)
     
@@ -98,7 +102,6 @@ for file in tiff_files:
                     hybvalue = hybmap[hybvalue] if hybvalue in hybmap else hybvalue
                     new_filename = f'Bleach_{str(hybvalue).zfill(2)}_{str(parts[-2][1:]).zfill(3)}.tiff'
 
-
             elif not evenhybs:
                 if hybvalue % 2 == 0:
                     hybvalue = hybmap[hybvalue] if hybvalue in hybmap else hybvalue
@@ -114,7 +117,6 @@ for file in tiff_files:
     
     new_file_path = os.path.join(cwd, new_filename)
         
-    # Rename the file
     os.rename(file, new_file_path)
     print(f'Renamed: {file} -> {new_file_path}')
     renamed_tiff_files.append(new_file_path)
@@ -171,7 +173,6 @@ for file in files:
 
             src_file = new_file_path
             dest_file = os.path.join(dest_folder, os.path.basename(src_file))
-
 
         else:
             src_file = os.path.join(cwd, file)

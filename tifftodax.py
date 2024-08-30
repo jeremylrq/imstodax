@@ -16,7 +16,8 @@ def create_dax(splitted_tiffs):
 
 
 if __name__ == "__main__":
-     create_dax()
+     tiffs = [] # Insert tiff file here
+     create_dax(tiffs)
 
 #
 # The MIT License
