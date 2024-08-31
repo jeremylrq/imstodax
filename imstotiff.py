@@ -191,8 +191,3 @@ def driver(passed_files, ds_factor=1):
 
     return tiff_list
 
-
-# To test driver ability to capture list of files
-if __name__ == "__main__":
-    test_ims_file = ["C:/Users/Jeremy/OneDrive/Desktop/GIS attachment/confocal testing/rename_test/test.ims"]
-    tiffs = driver(test_ims_file, ds_factor=1)

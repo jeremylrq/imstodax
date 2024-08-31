@@ -24,9 +24,9 @@ def process_tiff(tiff_path, output_dir, channel_list):
     tiff_name = re.split(r'[/,.]', tiff_path)[-2]
 
     # Load the multi-channel, multi-z-plane TIFF file
-    with tifffile.TiffFile(tiff_path) as tif:
-        images = tif.asarray()  # Read the entire TIFF as a numpy array
-        metadata = tif.series[0].axes  # Get axes information
+    with tifffile.TiffFile(tiff_path) as tiff:
+        images = tiff.asarray()  # Read the entire TIFF as a numpy array
+        metadata = tiff.series[0].axes  # Get axes information
 
     if 'C' not in metadata or 'Z' not in metadata:
         raise ValueError("The TIFF file doesn't have channels or z-planes")
@@ -41,9 +41,8 @@ def process_tiff(tiff_path, output_dir, channel_list):
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
     
-    # Split and save each channel and z-plane: if channel 4-6, then write 3-6 (because up to but not including)
-    #for c in range(num_channels):
-    for c in range(3,6):
+    # Split and save each channel and z-plane: for manual toggling, if channel 4-6, then write 3-6.
+    for c in range(num_channels):
         for z in range(num_z_planes):
             # Select the appropriate channel and z-plane
             single_image = images.take(c, axis=channel_idx).take(z, axis=z_plane_idx)

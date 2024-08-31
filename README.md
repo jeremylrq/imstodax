@@ -3,7 +3,7 @@
 The script converts .ims files with z planes to either .tiff or .dax files, with z planes splitted, for further downstream analysis. 
 
 1. The choice of saving as .tiff or .dax can be toggled by modifying the save_as_dax parameter.
-2. The channel list has to be inputted manually to indicate the colour that corresponds to the channel (under channel_list). It is also possible to modify the channels to extract only specific channels for analysis.
+2. The channel list has to be inputted manually to indicate the colour that corresponds to the channel (under channel_list). It is also possible to modify the channels to extract only specific channels for analysis under the process_tiff function.
 3. The bleach parameter assumes that every other hyb round is a bleach round. e.g. 00 - Hyb 0, 01 - Hyb 0 bleach...
 
 # Workflow
@@ -16,11 +16,10 @@ where 0_F00 refers to the hyb number (2) and the FOV (region 05). The code may n
 5. .tiff files are converted to .dax if set to true.
 6. The files are sorted to their respective z-stacks. If remove_z_label is set True, the trailing _z1 parameter will be removed.
 
+# tiff-dax converter
+The tiffdaxconverter.py script can also be run independently to convert dax files to tiff files and vice versa.
+
 # Source code
-The tiff-to-dax conversion is from the Zhuang lab repository: https://github.com/ZhuangLab/storm-analysis/tree/71ae493cbd17ddb97938d0ae2032d97a0eaa76b2
+The tiffdaxconverter.py file is modified from the Zhuang lab repository: https://github.com/ZhuangLab/storm-analysis/tree/71ae493cbd17ddb97938d0ae2032d97a0eaa76b2
 
-The ims-to-tiff conversion is from the Oakes lab repository: https://github.com/OakesLab/ims-to-tif-converter
-
-
-
-
+The ims-to-tiff conversion is modified from the Oakes lab repository: https://github.com/OakesLab/ims-to-tif-converter
