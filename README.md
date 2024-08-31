@@ -23,6 +23,6 @@ The `tiffdaxconverter.py` script can also be run independently to convert dax fi
 
 # Source code
 
-The tiffdaxconverter.py file is modified from the Zhuang lab repository: https://github.com/ZhuangLab/storm-analysis/tree/71ae493cbd17ddb97938d0ae2032d97a0eaa76b2
+The `tiffdaxconverter.py` file is modified from the Zhuang lab repository: https://github.com/ZhuangLab/storm-analysis/tree/71ae493cbd17ddb97938d0ae2032d97a0eaa76b2
 
 The ims-to-tiff conversion is modified from the Oakes lab repository: https://github.com/OakesLab/ims-to-tif-converter
