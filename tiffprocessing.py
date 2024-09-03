@@ -41,7 +41,7 @@ def process_tiff(tiff_path, output_dir, channel_list):
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
     
-    # Split and save each channel and z-plane: for manual toggling, if channel 4-6, then write 3-6.
+    # Split and save each channel and z-plane: num_channels can be adjusted for manual toggling of selected channels
     for c in range(num_channels):
         for z in range(num_z_planes):
             # Select the appropriate channel and z-plane
