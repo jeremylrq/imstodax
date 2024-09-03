@@ -14,9 +14,13 @@ The script converts .ims files with z planes to either .tiff or .dax files, with
 
 # Code overview
 `channel_list`: to be inputted manually. Maps the channel in the .ims image to the channel eventually appended to the front of the file. e.g. Channel 1 - Cy3... Note that it is also possible for a subset of channels to be selected, e.g. c4-c6. However, this also requires modifying code under `process_tiff`.
+
 `save_as_dax`: to toggle between saving as a .dax or .tiff file. .dax files are originally built for STORM microscope analysis under the Zhuang lab in Harvard. Some multiplexed FISH pipelines rely on the .dax image format. Nevertheless, setting it as False will save images in the more common .tiff format.
+
 `remove_z_label`: usually set to True, as it makes the file format neater. The z-label is used to sort images into their respective z-plane at the end of analysis.
+
 `bleach`: can be toggled between True and False. In a multiplexed FISH workflow we have alternate rounds of hybridisation (for our fluorescently-labelled readouts) and bleaching (to remove our fluorescently-labelled readouts). However the Imaris acquisition software simply saves each imaging round in ascending order and bleach rounds will be obscured. Set to True to include bleach labelling.
+
 `first_hybnum` and `final_hybnum`: the hyb numbers that were originally saved during image acquisition. 
 
 # Detailed workflow
@@ -27,11 +31,12 @@ We first set the working directory for the analysis to be done via the Tk librar
 # 2. Bleach hybridisation map
 This code will only run if bleach is toggled.
 
-For a given imaging session, the images will be generated sequentially: 00, 01, 02, 03... However due to alternating hybridisation and bleaching rounds it should be set to 00, 00_Bleach, 01, 01_Bleach... instead. The code achieves this by generating a dictionary to map the hybridisation rounds to the actual hyb/bleach cycle. We need to consider two separate scenarios of the first hyb being either even or odd, as the numbering logic would be slightly different.
+For a given imaging session, the images will be generated sequentially: 00, 01, 02, 03... However due to alternating hybridisation and bleaching rounds it should be set to 00, Bleach_00, 01, Bleach_01... instead. The code achieves this by generating a dictionary to map the hybridisation rounds to the actual hyb/bleach cycle. We need to consider two separate scenarios of the first hyb being either even or odd, as the numbering logic would be slightly different.
 
 # 3. Renaming of .tiff files
 .ims files are then renamed to a format e.g. 07_005.tiff. Note that the code operates on the assumption that file names follow this format:
-"785_WF_CMOS_4000ms_785_iRFP_CF40_Sona1_637_Cy5_CF40_Sona1_561_RFP_CF40_Sona1_785_iRFP_WF_Sona1_637_Cy5_WF_Sona1_561_RFP_WF_Sona1_2_F05.ims"
+>"785_WF_CMOS_4000ms_785_iRFP_CF40_Sona1_637_Cy5_CF40_Sona1_561_RFP_CF40_Sona1_785_iRFP_WF_Sona1_637_Cy5_WF_Sona1_561_RFP_WF_Sona1_2_F05.ims"
+
 where 2_F05 refers to the hyb number (2) and the FOV (region 05). The code can be modified to suit the file name formatting. The number of leading zeroes can be changed with the `.zfill()` parameter. 
 
 If bleach is toggled, we need to append 'Bleach' to every alternate hybridisation round. The code logic has to be kept separate via `evenhybs` because `hybmap` does not store the bleach rounds.
