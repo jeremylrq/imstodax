@@ -4,14 +4,13 @@ The script converts .ims files with z planes to either .tiff or .dax files, with
 
 .ims files are a proprietary image format of Andor confocal microscopes from Oxford Instruments. Unfortunately the .ims files are not very amenable to robust analysis by common imaging pipelines which usually rely on other file formats. Our lab performs MERFISH (multiplexed error-robust FISH), a genetic technique, and we are newly interested in z-plane analysis of regions of cells to study spatial gene distribution by microscopy. Currently, the lab does not have a pipeline to analyse individual z-planes and we rely on a maximum intensity projection of the entire z-stack which may not be spatially accurate. The script accomplishes this through these steps:
 
-1. Conversion of .ims to .tiff files.
-2. Setting up bleach hybridisation mapping (if set to True)
-2. Parsing .tiff files into individual z-planes.
-3. Bulk renaming of .tiff files into a file format, labelled by microscope channel and z-plane, also factoring in bleach rounds.
-4. Renaming of microscope channel to something more intelligible.
-5. Conversion of .tiff to .dax files, another proprietary file format.
-6. Sorting of .dax files into respective z-planes.
-
+1. Conversion of .ims to .tiff files
+2. Bleach hybridisation map
+3. Renaming of .tiff files
+4. Parsing .tiff files into individual channels and z stacks
+5. Conversion of .tiff to .dax files
+6. Sorting of .tiff / .dax files into respective z-planes
+   
 # Code overview
 `channel_list`: to be inputted manually. Maps the channel in the .ims image to the channel eventually appended to the front of the file. e.g. Channel 1 - Cy3... Note that it is also possible for a subset of channels to be selected, e.g. c4-c6. However, this also requires modifying code under `process_tiff`.
 
