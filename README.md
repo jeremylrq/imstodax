@@ -53,7 +53,7 @@ The files are sorted into their individual z-planes utilising the trailing _z la
 
 # tiff-dax converter
 
-The `tiffdaxconverter.py` script can also be run independently to convert dax to tiff files and vice versa. It does the conversion for all valid files in the working directory. For the .tiff to .dax conversion, we need to first rename all .tif to .tiff files because the tifffile library only recognises the .tiff extension. Interestingly there did not seem to be a .dax to .tiff converter online in Python, only in Matlab, but the actual conversion process was quite simple.
+The `tiffdaxconverter.py` script can also be run independently to convert dax to tiff files and vice versa. It does the conversion for all valid files in the working directory. For the .tiff to .dax conversion, we need to first rename all .tif to .tiff files because the tifffile library only recognises the .tiff extension.
 
 # Credits
 
