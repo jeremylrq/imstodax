@@ -83,7 +83,7 @@ for file in tiff_files:
     parts = re.split(r'[_\.]', file)
     
     # For cases where the file ends with "Sona_F00" which indicates the first hyb. This corresponds to 00_00 on Dory (should be more dynamic)
-    # if parts[-3].startswith('Sona'):
+    #  if parts[-3].startswith('Sona'):
     #     # Assumes that DAPI images are taken on first hyb and named separately from the first hyb (filename starts with DAPI)
     #     if parts[1].startswith('DAPI'):
     #         new_filename = f'DAPI_00_0{parts[-2][1:]}'
@@ -111,8 +111,8 @@ for file in tiff_files:
                 hybvalue = hybmap[hybvalue] if hybvalue in hybmap else hybvalue
                 new_filename = f'{str(hybvalue).zfill(2)}_{str(parts[-2][1:]).zfill(3)}.tiff'
 
-    else:
-        new_filename = f'{str(hybvalue).zfill(2)}_{str(parts[-2][1:]).zfill(3)}.tiff'
+        else:
+            new_filename = f'{str(hybvalue).zfill(2)}_{str(parts[-2][1:]).zfill(3)}.tiff'
 
     
     new_file_path = os.path.join(cwd, new_filename)

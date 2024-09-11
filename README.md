@@ -11,6 +11,13 @@ The script converts .ims files with z planes to either .tiff or .dax files, with
 5. Conversion of .tiff to .dax files
 6. Sorting of .tiff / .dax files into respective z-planes
 
+1. Conversion of .ims to .tiff files
+2. Bleach hybridisation map
+3. Renaming of .tiff files
+4. Parsing .tiff files into individual channels and z stacks
+5. Conversion of .tiff to .dax files
+6. Sorting of .tiff / .dax files into respective z-planes
+   
 # Code overview
 `channel_list`: to be inputted manually. Maps the channel in the .ims image to the channel eventually appended to the front of the file. e.g. Channel 1 - Cy3... Note that it is also possible for a subset of channels to be selected, e.g. c4-c6. 
 
@@ -53,7 +60,7 @@ The files are sorted into their individual z-planes utilising the trailing _z la
 
 # tiff-dax converter
 
-The `tiffdaxconverter.py` script can also be run independently to convert dax to tiff files and vice versa. It does the conversion for all valid files in the working directory. For the .tiff to .dax conversion, we need to first rename all .tif to .tiff files because the tifffile library only recognises the .tiff extension. Interestingly there did not seem to be a .dax to .tiff converter online in Python, only in Matlab, but the actual conversion process was quite simple.
+The `tiffdaxconverter.py` script can also be run independently to convert dax to tiff files and vice versa. It does the conversion for all valid files in the working directory. For the .tiff to .dax conversion, we need to first rename all .tif to .tiff files because the tifffile library only recognises the .tiff extension.
 
 # Credits
 
