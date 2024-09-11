@@ -20,16 +20,16 @@ from tiffdaxconverter import create_dax
 
 ################### PARAMETERS TO MODIFY MANUALLY ##########################
 # channel_list = {"c1": "Cy3_WF", "c2": "Cy7_WF", "c3": "Cy5_WF", "c4": "Cy3_confocal", "c5": "Cy7_confocal", "c6": "Cy5_confocal"}
-# channel_list = {"c1": "Cy3", "c2": "Cy5"} # Set the channel labels
-channel_list = {"c4": "Cy3", "c5": "Cy7", "c6": "Cy5"} # Set the channel labels
+channel_list = {"c1": "Cy3", "c2": "Cy5"} # Set the channel labels
+# channel_list = {"c4": "Cy3", "c5": "Cy7", "c6": "Cy5"} # Set the channel labels
 
 save_as_dax = True # Set to false to save as tiff
 remove_z_label = True # To remove trailing z at the back of filename
-bleach = True # Set true/false to toggle bleach numbering
+bleach = False # Set true/false to toggle bleach numbering
 
 # Check files to toggle first and final hyb numbers manually. Must be integers. The first hyb number must be a hyb round and not a bleaching round.
-first_hybnum = 0
-last_hybnum = 5
+first_hybnum = 2
+last_hybnum = 2
 ####################################################################
 
 # Select directory containing .ims / .tiff files
@@ -83,7 +83,7 @@ for file in tiff_files:
     parts = re.split(r'[_\.]', file)
     
     # For cases where the file ends with "Sona_F00" which indicates the first hyb. This corresponds to 00_00 on Dory (should be more dynamic)
-    #  if parts[-3].startswith('Sona'):
+    # if parts[-3].startswith('Sona'):
     #     # Assumes that DAPI images are taken on first hyb and named separately from the first hyb (filename starts with DAPI)
     #     if parts[1].startswith('DAPI'):
     #         new_filename = f'DAPI_00_0{parts[-2][1:]}'
@@ -111,9 +111,8 @@ for file in tiff_files:
                 hybvalue = hybmap[hybvalue] if hybvalue in hybmap else hybvalue
                 new_filename = f'{str(hybvalue).zfill(2)}_{str(parts[-2][1:]).zfill(3)}.tiff'
 
-        else:
-            new_filename = f'{str(hybvalue).zfill(2)}_{str(parts[-2][1:]).zfill(3)}.tiff'
-
+    else:
+        new_filename = f'{str(hybvalue).zfill(2)}_{str(parts[-2][1:]).zfill(3)}.tiff'
     
     new_file_path = os.path.join(cwd, new_filename)
         
