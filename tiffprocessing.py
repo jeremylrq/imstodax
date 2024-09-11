@@ -31,9 +31,10 @@ def process_tiff(tiff_path, output_dir, channel_list):
     if 'C' not in metadata or 'Z' not in metadata:
         raise ValueError("The TIFF file doesn't have channels or z-planes")
 
-    # Get the number of channels and z-planes
+    # # Get the number of channels and z-planes
     channel_idx = metadata.index('C')
-    num_channels = images.shape[channel_idx]
+    # num_channels = images.shape[channel_idx]
+    num_channels = extract_channel_numbers(channel_list)
 
     z_plane_idx = metadata.index('Z')
     num_z_planes = images.shape[z_plane_idx]
@@ -41,8 +42,8 @@ def process_tiff(tiff_path, output_dir, channel_list):
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
     
-    # Split and save each channel and z-plane: num_channels can be adjusted for manual toggling of selected channels
-    for c in range(num_channels):
+    # Split and save each channel and z-plane
+    for c in num_channels:
         for z in range(num_z_planes):
             # Select the appropriate channel and z-plane
             single_image = images.take(c, axis=channel_idx).take(z, axis=z_plane_idx)
@@ -57,7 +58,7 @@ def process_tiff(tiff_path, output_dir, channel_list):
             output_path = output_path.replace('\\','/')
             splitted_tiffs.append(output_path)
 
-    print(f"Saved {num_channels * num_z_planes} images to {output_dir}")
+    print(f"Saved {len(num_channels) * num_z_planes} images to {output_dir}")
 
     return splitted_tiffs
 
@@ -75,3 +76,9 @@ def z_channels(tiff_path):
     num_z_planes = images.shape[z_plane_idx]
 
     return num_z_planes
+
+def extract_channel_numbers(channel_list):
+    # Extract the numbers from the keys and convert them to integers
+    channel_numbers = [int(key[1:]) for key in channel_list.keys()]
+    updated_channel_numbers = [x - 1 for x in channel_numbers]
+    return sorted(updated_channel_numbers)
